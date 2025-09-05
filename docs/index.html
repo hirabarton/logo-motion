@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Three.js Spinner</title>
+<style>html,body{height:100%;margin:0;background:#0b0f14}</style>
+<canvas id="c"></canvas>
+<script type="module">
+  import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+  const canvas = document.querySelector('#c');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, 2, 0.1, 100);
+  camera.position.set(0, 0, 4);
+
+  const geo = new THREE.TorusKnotGeometry(0.9, 0.3, 200, 32);
+  const mat = new THREE.MeshStandardMaterial({metalness:0.6, roughness:0.25, color:0x4cc9f0});
+  const mesh = new THREE.Mesh(geo, mat); scene.add(mesh);
+
+  const light1 = new THREE.PointLight(0xffffff, 1.2); light1.position.set(5,5,5); scene.add(light1);
+  const light2 = new THREE.PointLight(0x64dfdf, 0.6); light2.position.set(-5,-4,3); scene.add(light2);
+
+  function resize() {
+    const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize); resize();
+
+  (function loop(t=0){
+    mesh.rotation.x = t*0.0005;
+    mesh.rotation.y = t*0.0011;
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  })();
+</script>
+</html>
